@@ -185,6 +185,7 @@ img_j2_gagne = pygame.image.load('assets/images/j2_gagne.png')
 #import des sons
 son_epees = pygame.mixer.Sound("assets/sons/son_épées.wav")
 son_bouclier = pygame.mixer.Sound("assets/sons/son_bouclier.wav")
+son_menu = pygame.mixer.Sound("assets/sons/son_menu.mp3")
 music_fond = pygame.mixer.music.load("assets/sons/musique_fond.mp3")
 pygame.mixer.music.play(-1)
 
@@ -224,6 +225,7 @@ while is_running :
         for event in pygame.event.get() :
             if event.type == pygame.MOUSEBUTTONUP :
                 if event.button == 1: # 1= clique gauche
+                    son_menu.play()
                     if bouton_diff.collidepoint(event.pos) :
                         difficulty = change_difficulty(difficulty)
                         print("diff: ", difficulty)
@@ -239,92 +241,98 @@ while is_running :
                 is_running = False
                 tour_fini = True
                 pygame.quit()
-    while is_game == True :
-        screen.blit(background,(0, 0))
+
+    #while is_game == True :
+    screen.blit(background,(0, 0))
+    print_board(board)
+
+    #affichage des infos sur la pancarte
+    if is_computer :
+        print_info(signe_actuel, is_winner(board, 'X') or is_winner(board, 'O'), is_full(board))
+    else :
+        print_info(signe_joueur, is_winner(board, 'X') or is_winner(board, 'O'), is_full(board))
+
+    pygame.display.flip()
+    tour_fini = False
+    while not tour_fini :
+        for event in pygame.event.get() :
+            if event.type == pygame.MOUSEBUTTONUP: #s'active quand clic laché
+                if event.button == 1 and is_game : # 1= clique gauche
+                    play_sound(signe_joueur)
+                    if bouton_00.collidepoint(event.pos) :
+                        board = tour_joueur("00", board, signe_joueur)
+                        print (board, signe_joueur)
+                        tour_fini = True
+                    if bouton_01.collidepoint(event.pos) :
+                        board = tour_joueur("01", board, signe_joueur)
+                        print(board, signe_joueur)
+                        tour_fini = True
+                    if bouton_02.collidepoint(event.pos) :
+                        board = tour_joueur("02", board, signe_joueur)
+                        print(board, signe_joueur)
+                        tour_fini = True
+                    if bouton_10.collidepoint(event.pos) :
+                        board = tour_joueur("10", board, signe_joueur)
+                        print(board, signe_joueur)
+                        tour_fini = True
+                    if bouton_11.collidepoint(event.pos) :
+                        board = tour_joueur("11", board, signe_joueur)
+                        print(board, signe_joueur)
+                        tour_fini = True
+                    if bouton_12.collidepoint(event.pos) :
+                        board = tour_joueur("12", board, signe_joueur)
+                        print(board, signe_joueur)
+                        tour_fini = True
+                    if bouton_20.collidepoint(event.pos) :
+                        board = tour_joueur("20", board, signe_joueur)
+                        print(board, signe_joueur)
+                        tour_fini = True
+                    if bouton_21.collidepoint(event.pos) :
+                        board = tour_joueur("21", board, signe_joueur)
+                        print(board)
+                        tour_fini = True
+                    if bouton_22.collidepoint(event.pos) :
+                        board = tour_joueur("22", board, signe_joueur)
+                        print(board)
+                        tour_fini = True
+
+            if event.type == pygame.QUIT:
+                is_running = False
+                tour_fini = True
+                pygame.quit()
+
+    if is_multiplayer and not is_winner(board, signe_joueur):
+        signe_joueur = change_signe(signe_joueur)
+
+    if is_computer and not is_winner(board, "X") and not is_full(board) :
+        print_info('O', False, False)
+        time.sleep(1)
+        # L’IA choisit le meilleur coup
+        move = best_move(board)
+        # On applique le coup si disponible
+        if move:
+            board[move[0]][move[1]] = 'O'
         print_board(board)
-
-        #affichage des infos sur la pancarte
-        if is_computer :
-            print_info(signe_actuel, is_winner(board, 'X') or is_winner(board, 'O'), is_full(board))
-        else :
-            print_info(signe_joueur, is_winner(board, 'X') or is_winner(board, 'O'), is_full(board))
-
-        pygame.display.flip()
-        tour_fini = False
-        while not tour_fini :
-            for event in pygame.event.get() :
-                if event.type == pygame.MOUSEBUTTONUP: #s'active quand clic laché
-                    if event.button == 1: # 1= clique gauche
-                        play_sound(signe_joueur)
-                        if bouton_00.collidepoint(event.pos) :
-                            board = tour_joueur("00", board, signe_joueur)
-                            print (board, signe_joueur)
-                            tour_fini = True
-                        if bouton_01.collidepoint(event.pos) :
-                            board = tour_joueur("01", board, signe_joueur)
-                            print(board, signe_joueur)
-                            tour_fini = True
-                        if bouton_02.collidepoint(event.pos) :
-                            board = tour_joueur("02", board, signe_joueur)
-                            print(board, signe_joueur)
-                            tour_fini = True
-                        if bouton_10.collidepoint(event.pos) :
-                            board = tour_joueur("10", board, signe_joueur)
-                            print(board, signe_joueur)
-                            tour_fini = True
-                        if bouton_11.collidepoint(event.pos) :
-                            board = tour_joueur("11", board, signe_joueur)
-                            print(board, signe_joueur)
-                            tour_fini = True
-                        if bouton_12.collidepoint(event.pos) :
-                            board = tour_joueur("12", board, signe_joueur)
-                            print(board, signe_joueur)
-                            tour_fini = True
-                        if bouton_20.collidepoint(event.pos) :
-                            board = tour_joueur("20", board, signe_joueur)
-                            print(board, signe_joueur)
-                            tour_fini = True
-                        if bouton_21.collidepoint(event.pos) :
-                            board = tour_joueur("21", board, signe_joueur)
-                            print(board)
-                            tour_fini = True
-                        if bouton_22.collidepoint(event.pos) :
-                            board = tour_joueur("22", board, signe_joueur)
-                            print(board)
-                            tour_fini = True
-
-                if event.type == pygame.QUIT:
-                    is_running = False
-                    tour_fini = True
-                    pygame.quit()
-
-        if is_multiplayer and not is_winner(board, signe_joueur):
-            signe_joueur = change_signe(signe_joueur)
-
-        if is_computer and not is_winner(board, "X") and not is_full(board) :
-            print_info('O', False, False)
-            time.sleep(1)
-            # L’IA choisit le meilleur coup
-            move = best_move(board)
-            # On applique le coup si disponible
-            if move:
-                board[move[0]][move[1]] = 'O'
-            print_board(board)
-            play_sound(signe_ia)
+        play_sound(signe_ia)
         
-        elif is_winner(board, "X") :
-            print("Partie terminée : vous avez gagné !")
-            print_info(signe_joueur, True, False)
+    elif is_winner(board, "X") :
+        print("Partie terminée : vous avez gagné !")
+        print_info(signe_joueur, True, False)
+        is_game = False
 
-        elif is_full(board) :
-            print("Partie terminée : Egalité !")
-            print_info(signe_joueur, False, True)
+    elif is_full(board) :
+        print("Partie terminée : Egalité !")
+        print_info(signe_joueur, False, True)
+        is_game = False
 
-        if is_winner(board, signe_ia) :
-            print("Partie terminée : vous avez perdu !")
-            print_info(signe_ia, True, False)
-            signe_actuel = signe_ia
 
-        pygame.display.flip()
+    if is_winner(board, signe_ia) :
+        print("Partie terminée : vous avez perdu !")
+        print_info(signe_ia, True, False)
+        signe_actuel = signe_ia
+        is_game = False
+
+
+    pygame.display.flip()
 
 pygame.mixer.music.stop()
