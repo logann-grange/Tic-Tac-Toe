@@ -184,7 +184,9 @@ img_j2_gagne = pygame.image.load('assets/images/j2_gagne.png')
 
 #import des sons
 son_epees = pygame.mixer.Sound("assets/sons/son_épées.wav")
+son_epees.set_volume(0.5)
 son_bouclier = pygame.mixer.Sound("assets/sons/son_bouclier.wav")
+son_bouclier.set_volume(0.5)
 son_menu = pygame.mixer.Sound("assets/sons/son_menu.mp3")
 music_fond = pygame.mixer.music.load("assets/sons/musique_fond.mp3")
 pygame.mixer.music.play(-1)
